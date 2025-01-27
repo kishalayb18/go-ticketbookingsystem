@@ -2,3 +2,4 @@ git init
 git remote add origin https://github.com/kishalayb18/go-ticketbookingsystem.git
 git branch -M main
 git push -u origin main
+git branch --set-upstream-to=origin/main main
