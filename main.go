@@ -34,40 +34,62 @@ func main() {
 	// ticket booking logic
 	for {
 
-		// user details
+		// user details fnmae
 		fmt.Printf("Enter first name ")
 		fmt.Scan(&userFirstName)
 		fmt.Println("")
 
+		// user details lname
 		fmt.Printf("Enter last name ")
 		fmt.Scan(&userLastName)
 		fmt.Println("")
 
+		// user details mail
 		fmt.Printf("Enter mail ")
 		fmt.Scan(&userMail)
 		fmt.Println("")
 
+		// user details tickets number
 		fmt.Printf("Enter number of ticket ")
 		fmt.Scan(&userTickets)
-		fmt.Println("")
 
-		// remaining tickets
-		remainingTickets = remainingTickets - userTickets
+		// ticket number validation logic
 
-		fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
-		fmt.Printf("Tickets have been sent to %v", userMail)
+		tryValue := 2
+		for {
+			if userTickets > remainingTickets || userTickets <= 0 {
+				fmt.Printf("The numver of tickets you could choose is 1 to %v\n", remainingTickets)
+				// fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
+				fmt.Println("")
+				fmt.Printf("Please enteer a valid number ")
+				fmt.Scan(&userTickets)
+				tryValue--
+				if tryValue == 0 {
+					fmt.Println("Not Valid Booking")
+					break
+				}
+			} else {
+				fmt.Println("")
+				fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
+				fmt.Println("")
+				// remaining tickets
+				remainingTickets = remainingTickets - userTickets
 
-		fullName := userFirstName + " " + userLastName
+				fmt.Printf("Tickets have been sent to %v", userMail)
+				fmt.Println("")
 
-		shortName := ConvertToShortName(fullName)
+				// update the booking list
+				fullName := userFirstName + " " + userLastName
+				shortName := ConvertToShortName(fullName)
 
-		// update the booking list
+				bookingList = append(bookingList, shortName)
+				fmt.Printf("BookingList %v \n", bookingList)
+				fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
+				break
 
-		bookingList = append(bookingList, shortName)
+			}
+		}
 
-		fmt.Printf("BookingList %v \n", bookingList)
-
-		fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
 	}
 
 }
