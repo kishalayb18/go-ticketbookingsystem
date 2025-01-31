@@ -20,12 +20,12 @@ func main() {
 		userLastName     string
 		userMail         string
 		userTickets      int
+		bookRow          int
+		totalBill        int
 		bookingList      []string
 	)
 
-	fmt.Printf("Welcome to the %v Booking System\nWe have total %v tickets\n", conferenceName, conferenceTotalTickets)
-	fmt.Printf("Remaining number of tickets %v \n", remainingTickets)
-	fmt.Println("Get your tickets")
+	greetMsg(conferenceName, conferenceTotalTickets, remainingTickets)
 
 	// ticket booking logic
 	for {
@@ -49,13 +49,23 @@ func main() {
 		fmt.Printf("Enter number of ticket ")
 		fmt.Scan(&userTickets)
 
-		//name validation logic
+		fmt.Println("Select the preferred row")
+		fmt.Println("1. Front Row \t 2. Middle Row \t Back Row")
+		fmt.Printf("Select the choice number")
+		fmt.Scan(&bookRow)
+		fmt.Println("")
+
+		// validation logic
 		isValidName := len(userFirstName) > 2 && len(userLastName) > 2
 		isValidMail := strings.Contains(userMail, "@")
 		isValidTicketNumber := userTickets > remainingTickets || userTickets <= 0
+		isValidRow := bookRow < 1 || bookRow > 3
 
 		if !isValidName || !isValidMail {
 			fmt.Println("Please Provide Valid Name, Mail")
+			continue
+		} else if !isValidRow {
+			fmt.Println("Not a valid choice for row")
 			continue
 		} else if !isValidTicketNumber {
 			// ticket number validation logic
@@ -75,6 +85,16 @@ func main() {
 		} else {
 			// valid booking
 			fmt.Println("")
+			switch bookRow {
+			case 1:
+				totalBill = 5000 * userTickets
+			case 2:
+				totalBill = 3500 * userTickets
+			case 3:
+				totalBill = 1500 * userTickets
+			default:
+				fmt.Println("not a valid choice for row")
+			}
 			fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
 			fmt.Println("")
 			// remaining tickets
@@ -84,27 +104,29 @@ func main() {
 			fmt.Println("")
 
 			// update the booking list
-			fullName := userFirstName + " " + userLastName
-			shortName := ConvertToShortName(fullName)
-
-			bookingList = append(bookingList, shortName)
+			fullName := strings.ToUpper(userFirstName) + " " + strings.ToUpper(userLastName)
+			bookingList = append(bookingList, ConvertToShortName(fullName))
 			fmt.Printf("BookingList %v \n", bookingList)
 			fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
 			break
 
 		}
-
 	}
+}
 
+func greetMsg(conferenceName string, conferenceTotalTickets int, remainingTickets int) {
+	fmt.Printf("Welcome to the %v Booking System\nWe have total %v tickets\n", conferenceName, conferenceTotalTickets)
+	fmt.Printf("Remaining number of tickets %v \n", remainingTickets)
+	fmt.Println("Get your tickets")
 }
 
 // shortname method
 func ConvertToShortName(fullName string) string {
 	fullNmeArr := strings.Fields(fullName) // Split by space
 	if len(fullNmeArr) < 2 {
-		return strings.ToUpper(fullNmeArr[0]) // Return if only one name
+		return fullNmeArr[0] // Return if only one name
 	}
-	initial := strings.ToUpper(string(fullNmeArr[0][0])) // First letter of first name
-	lastName := strings.ToUpper(fullNmeArr[1])           // Last name
+	initial := string(fullNmeArr[0][0]) // First letter of first name
+	lastName := fullNmeArr[1]           // Last name
 	return fmt.Sprintf("%s.%s", initial, lastName)
 }
