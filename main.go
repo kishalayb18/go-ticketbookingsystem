@@ -21,15 +21,11 @@ func main() {
 		userMail         string
 		userTickets      int
 		bookingList      []string
-
-		// arr_p_bl = 0
 	)
 
 	fmt.Printf("Welcome to the %v Booking System\nWe have total %v tickets\n", conferenceName, conferenceTotalTickets)
 	fmt.Printf("Remaining number of tickets %v \n", remainingTickets)
 	fmt.Println("Get your tickets")
-
-	// userName = "Pat"
 
 	// ticket booking logic
 	for {
@@ -53,11 +49,18 @@ func main() {
 		fmt.Printf("Enter number of ticket ")
 		fmt.Scan(&userTickets)
 
-		// ticket number validation logic
+		//name validation logic
+		isValidName := len(userFirstName) > 2 && len(userLastName) > 2
+		isValidMail := strings.Contains(userMail, "@")
+		isValidTicketNumber := userTickets > remainingTickets || userTickets <= 0
 
-		tryValue := 2
-		for {
-			if userTickets > remainingTickets || userTickets <= 0 {
+		if !isValidName || !isValidMail {
+			fmt.Println("Please Provide Valid Name, Mail")
+			continue
+		} else if !isValidTicketNumber {
+			// ticket number validation logic
+			tryValue := 2
+			for {
 				fmt.Printf("The numver of tickets you could choose is 1 to %v\n", remainingTickets)
 				// fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
 				fmt.Println("")
@@ -68,26 +71,27 @@ func main() {
 					fmt.Println("Not Valid Booking")
 					break
 				}
-			} else {
-				fmt.Println("")
-				fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
-				fmt.Println("")
-				// remaining tickets
-				remainingTickets = remainingTickets - userTickets
-
-				fmt.Printf("Tickets have been sent to %v", userMail)
-				fmt.Println("")
-
-				// update the booking list
-				fullName := userFirstName + " " + userLastName
-				shortName := ConvertToShortName(fullName)
-
-				bookingList = append(bookingList, shortName)
-				fmt.Printf("BookingList %v \n", bookingList)
-				fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
-				break
-
 			}
+		} else {
+			// valid booking
+			fmt.Println("")
+			fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
+			fmt.Println("")
+			// remaining tickets
+			remainingTickets = remainingTickets - userTickets
+
+			fmt.Printf("Tickets have been sent to %v", userMail)
+			fmt.Println("")
+
+			// update the booking list
+			fullName := userFirstName + " " + userLastName
+			shortName := ConvertToShortName(fullName)
+
+			bookingList = append(bookingList, shortName)
+			fmt.Printf("BookingList %v \n", bookingList)
+			fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
+			break
+
 		}
 
 	}
