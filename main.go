@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 		userTickets      int
 		bookingList      []string
 
-		arr_p_bl = 0
+		// arr_p_bl = 0
 	)
 
 	fmt.Printf("Welcome to the %v Booking System\nWe have total %v tickets\n", conferenceName, conferenceTotalTickets)
@@ -30,32 +31,54 @@ func main() {
 
 	// userName = "Pat"
 
-	fmt.Printf("Enter first name ")
-	fmt.Scan(&userFirstName)
-	fmt.Println("")
+	// ticket booking logic
+	for {
 
-	fmt.Printf("Enter last name ")
-	fmt.Scan(&userLastName)
-	fmt.Println("")
+		// user details
+		fmt.Printf("Enter first name ")
+		fmt.Scan(&userFirstName)
+		fmt.Println("")
 
-	fmt.Printf("Enter mail ")
-	fmt.Scan(&userMail)
-	fmt.Println("")
+		fmt.Printf("Enter last name ")
+		fmt.Scan(&userLastName)
+		fmt.Println("")
 
-	fmt.Printf("Enter number of ticket ")
-	fmt.Scan(&userTickets)
-	fmt.Println("")
+		fmt.Printf("Enter mail ")
+		fmt.Scan(&userMail)
+		fmt.Println("")
 
-	remainingTickets = remainingTickets - userTickets
+		fmt.Printf("Enter number of ticket ")
+		fmt.Scan(&userTickets)
+		fmt.Println("")
 
-	fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
-	fmt.Printf("Tickets have been sent to %v", userMail)
+		// remaining tickets
+		remainingTickets = remainingTickets - userTickets
 
-	bookingList = append(bookingList, userFirstName+" "+userLastName)
-	arr_p_bl++
-	fmt.Println(arr_p_bl)
-	fmt.Printf("List %v \n", bookingList)
+		fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
+		fmt.Printf("Tickets have been sent to %v", userMail)
 
-	fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
+		fullName := userFirstName + " " + userLastName
 
+		shortName := ConvertToShortName(fullName)
+
+		// update the booking list
+
+		bookingList = append(bookingList, shortName)
+
+		fmt.Printf("BookingList %v \n", bookingList)
+
+		fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
+	}
+
+}
+
+// shortname method
+func ConvertToShortName(fullName string) string {
+	fullNmeArr := strings.Fields(fullName) // Split by space
+	if len(fullNmeArr) < 2 {
+		return strings.ToUpper(fullNmeArr[0]) // Return if only one name
+	}
+	initial := strings.ToUpper(string(fullNmeArr[0][0])) // First letter of first name
+	lastName := strings.ToUpper(fullNmeArr[1])           // Last name
+	return fmt.Sprintf("%s.%s", initial, lastName)
 }
