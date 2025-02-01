@@ -5,61 +5,37 @@ import (
 	"strings"
 )
 
-func main() {
-	const (
-		conferenceName         = "Coldplay Coference"
-		conferenceTotalTickets = 50
-		firstRowTicketPrice    = 5000
-		midRowTicketPrice      = 3000
-		lastRowTicketPrice     = 5000
-	)
+const (
+	conferenceName         = "Coldplay Coference"
+	conferenceTotalTickets = 50
+	firstRowTicketPrice    = 5000
+	midRowTicketPrice      = 3000
+	lastRowTicketPrice     = 5000
+)
 
-	var (
-		remainingTickets = 50
-		userFirstName    string
-		userLastName     string
-		userMail         string
-		userTickets      int
-		bookRow          int
-		totalBill        int
-		bookingList      []string
-	)
+var (
+	remainingTickets    = 50
+	userFirstName       string
+	userLastName        string
+	userMail            string
+	userTickets         int
+	bookRow             int
+	bookingList         []string
+	isValidName         bool
+	isValidMail         bool
+	isValidTicketNumber bool
+	isValidRow          bool
+)
+
+func main() {
 
 	greetMsg(conferenceName, conferenceTotalTickets, remainingTickets)
 
 	// ticket booking logic
 	for {
 
-		// user details fnmae
-		fmt.Printf("Enter first name ")
-		fmt.Scan(&userFirstName)
-		fmt.Println("")
-
-		// user details lname
-		fmt.Printf("Enter last name ")
-		fmt.Scan(&userLastName)
-		fmt.Println("")
-
-		// user details mail
-		fmt.Printf("Enter mail ")
-		fmt.Scan(&userMail)
-		fmt.Println("")
-
-		// user details tickets number
-		fmt.Printf("Enter number of ticket ")
-		fmt.Scan(&userTickets)
-
-		fmt.Println("Select the preferred row")
-		fmt.Println("1. Front Row \t 2. Middle Row \t Back Row")
-		fmt.Printf("Select the choice number")
-		fmt.Scan(&bookRow)
-		fmt.Println("")
-
-		// validation logic
-		isValidName := len(userFirstName) > 2 && len(userLastName) > 2
-		isValidMail := strings.Contains(userMail, "@")
-		isValidTicketNumber := userTickets > remainingTickets || userTickets <= 0
-		isValidRow := bookRow < 1 || bookRow > 3
+		userFirstName, userLastName, userMail, userTickets, bookRow = getBookingDetails()
+		isValidName, isValidMail, isValidTicketNumber, isValidRow := validateBooking(userFirstName, userLastName, userMail, userTickets, remainingTickets, bookRow)
 
 		if !isValidName || !isValidMail {
 			fmt.Println("Please Provide Valid Name, Mail")
@@ -69,11 +45,9 @@ func main() {
 			continue
 		} else if !isValidTicketNumber {
 			// ticket number validation logic
-			tryValue := 2
+			tryValue := 1
 			for {
-				fmt.Printf("The numver of tickets you could choose is 1 to %v\n", remainingTickets)
-				// fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
-				fmt.Println("")
+				fmt.Printf("The number of tickets you could choose is 1 to %v\n", remainingTickets)
 				fmt.Printf("Please enteer a valid number ")
 				fmt.Scan(&userTickets)
 				tryValue--
@@ -83,32 +57,7 @@ func main() {
 				}
 			}
 		} else {
-			// valid booking
-			fmt.Println("")
-			switch bookRow {
-			case 1:
-				totalBill = 5000 * userTickets
-			case 2:
-				totalBill = 3500 * userTickets
-			case 3:
-				totalBill = 1500 * userTickets
-			default:
-				fmt.Println("not a valid choice for row")
-			}
-			fmt.Printf("Booking Successful %v %v has booked %v tickets\n", userFirstName, userLastName, userTickets)
-			fmt.Println("")
-			// remaining tickets
-			remainingTickets = remainingTickets - userTickets
-
-			fmt.Printf("Tickets have been sent to %v", userMail)
-			fmt.Println("")
-
-			// update the booking list
-			fullName := strings.ToUpper(userFirstName) + " " + strings.ToUpper(userLastName)
-			bookingList = append(bookingList, ConvertToShortName(fullName))
-			fmt.Printf("BookingList %v \n", bookingList)
-			fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
-			break
+			bookingList, remainingTickets = ticktBooking(userFirstName, userLastName, userTickets, userMail, bookRow, remainingTickets, bookingList)
 
 		}
 	}
@@ -120,8 +69,43 @@ func greetMsg(conferenceName string, conferenceTotalTickets int, remainingTicket
 	fmt.Println("Get your tickets")
 }
 
+// get details
+func getBookingDetails() (string, string, string, int, int) {
+	var (
+		userFirstName string
+		userLastName  string
+		userMail      string
+		userTickets   int
+		bookRow       int
+	)
+
+	fmt.Printf("Enter first name ")
+	fmt.Scan(&userFirstName)
+	fmt.Println("")
+
+	fmt.Printf("Enter last name ")
+	fmt.Scan(&userLastName)
+	fmt.Println("")
+
+	fmt.Printf("Enter mail ")
+	fmt.Scan(&userMail)
+	fmt.Println("")
+
+	fmt.Printf("Enter number of ticket ")
+	fmt.Scan(&userTickets)
+	fmt.Println("")
+
+	fmt.Println("Select the preferred row")
+	fmt.Println("1. Front Row \t 2. Middle Row \t Back Row")
+	fmt.Printf("Select the choice number ")
+	fmt.Scan(&bookRow)
+	fmt.Println("")
+
+	return userFirstName, userLastName, userMail, userTickets, bookRow
+}
+
 // shortname method
-func ConvertToShortName(fullName string) string {
+func convertToShortName(fullName string) string {
 	fullNmeArr := strings.Fields(fullName) // Split by space
 	if len(fullNmeArr) < 2 {
 		return fullNmeArr[0] // Return if only one name
@@ -129,4 +113,58 @@ func ConvertToShortName(fullName string) string {
 	initial := string(fullNmeArr[0][0]) // First letter of first name
 	lastName := fullNmeArr[1]           // Last name
 	return fmt.Sprintf("%s.%s", initial, lastName)
+}
+
+// validate datas logic
+func validateBooking(userFirstName string, userLastName string, userMail string, userTickets int, remainingTickets int, bookRow int) (bool, bool, bool, bool) {
+	isValidName = len(userFirstName) > 2 && len(userLastName) > 2
+	isValidMail = strings.Contains(userMail, "@")
+	isValidTicketNumber = userTickets <= remainingTickets || userTickets > 0
+	isValidRow = bookRow >= 1 || bookRow <= 3
+
+	return isValidName, isValidMail, isValidTicketNumber, isValidRow
+}
+
+// ticket booking
+func ticktBooking(userFirstName string, userLastName string, userTickets int, userMail string, bookRow int, remainingTickets int, bookingList []string) ([]string, int) {
+	totalTicketBill, selectedRow := calculateBill(bookRow, userTickets)
+	fmt.Printf("Booking Successful %v %v has booked %v %vtickets\n", userFirstName, userLastName, userTickets, selectedRow)
+	fmt.Println("")
+
+	fmt.Printf("Tickets have been sent to %v", userMail)
+	fmt.Printf("Total bill %v", totalTicketBill)
+	fmt.Println("")
+
+	// update the booking list
+	fullName := strings.ToUpper(userFirstName) + " " + strings.ToUpper(userLastName)
+	bookingList = append(bookingList, convertToShortName(fullName))
+	fmt.Printf("BookingList %v \n", bookingList)
+
+	// remaining tickets
+	remainingTickets = remainingTickets - userTickets
+	fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
+
+	return bookingList, remainingTickets
+
+}
+
+func calculateBill(bookRow int, userTickets int) (int, string) {
+	var totalBill int
+	var rowName string
+	switch bookRow {
+	case 1:
+		totalBill = 5000 * userTickets
+		rowName = "Front Row"
+	case 2:
+		totalBill = 3500 * userTickets
+		rowName = "Middle Row"
+	case 3:
+		totalBill = 1500 * userTickets
+		rowName = "back Row"
+	default:
+		fmt.Println("not a valid choice for row")
+		totalBill = 0
+		rowName = ""
+	}
+	return totalBill, rowName
 }
