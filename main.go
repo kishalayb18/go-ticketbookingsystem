@@ -8,34 +8,30 @@ import (
 const (
 	conferenceName         = "Coldplay Coference"
 	conferenceTotalTickets = 50
-	firstRowTicketPrice    = 5000
-	midRowTicketPrice      = 3000
-	lastRowTicketPrice     = 5000
 )
 
 var (
-	remainingTickets    = 50
-	userFirstName       string
-	userLastName        string
-	userMail            string
-	userTickets         int
-	bookRow             int
-	bookingList         []string
-	isValidName         bool
-	isValidMail         bool
-	isValidTicketNumber bool
-	isValidRow          bool
+	remainingTickets = 50
+	bookingList      []string
 )
 
 func main() {
 
-	greetMsg(conferenceName, conferenceTotalTickets, remainingTickets)
+	var (
+		userFirstName string
+		userLastName  string
+		userMail      string
+		userTickets   int
+		bookRow       int
+	)
+
+	greetMsg(remainingTickets)
 
 	// ticket booking logic
 	for {
 
 		userFirstName, userLastName, userMail, userTickets, bookRow = getBookingDetails()
-		isValidName, isValidMail, isValidTicketNumber, isValidRow := validateBooking(userFirstName, userLastName, userMail, userTickets, remainingTickets, bookRow)
+		isValidName, isValidMail, isValidTicketNumber, isValidRow := validateBooking(userFirstName, userLastName, userMail, userTickets, bookRow)
 
 		if !isValidName || !isValidMail {
 			fmt.Println("Please Provide Valid Name, Mail")
@@ -57,16 +53,19 @@ func main() {
 				}
 			}
 		} else {
-			bookingList, remainingTickets = ticktBooking(userFirstName, userLastName, userTickets, userMail, bookRow, remainingTickets, bookingList)
+			bookingList, remainingTickets = ticktBooking(userFirstName, userLastName, userTickets, userMail, bookRow)
+			greetMsg(remainingTickets)
 
 		}
 	}
 }
 
-func greetMsg(conferenceName string, conferenceTotalTickets int, remainingTickets int) {
+func greetMsg(remainingTickets int) {
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	fmt.Printf("Welcome to the %v Booking System\nWe have total %v tickets\n", conferenceName, conferenceTotalTickets)
 	fmt.Printf("Remaining number of tickets %v \n", remainingTickets)
 	fmt.Println("Get your tickets")
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 }
 
 // get details
@@ -116,33 +115,34 @@ func convertToShortName(fullName string) string {
 }
 
 // validate datas logic
-func validateBooking(userFirstName string, userLastName string, userMail string, userTickets int, remainingTickets int, bookRow int) (bool, bool, bool, bool) {
-	isValidName = len(userFirstName) > 2 && len(userLastName) > 2
-	isValidMail = strings.Contains(userMail, "@")
-	isValidTicketNumber = userTickets <= remainingTickets || userTickets > 0
-	isValidRow = bookRow >= 1 || bookRow <= 3
+func validateBooking(userFirstName string, userLastName string, userMail string, userTickets int, bookRow int) (bool, bool, bool, bool) {
+	isValidName := len(userFirstName) > 2 && len(userLastName) > 2
+	isValidMail := strings.Contains(userMail, "@")
+	isValidTicketNumber := userTickets <= remainingTickets || userTickets > 0
+	isValidRow := bookRow >= 1 || bookRow <= 3
 
 	return isValidName, isValidMail, isValidTicketNumber, isValidRow
 }
 
 // ticket booking
-func ticktBooking(userFirstName string, userLastName string, userTickets int, userMail string, bookRow int, remainingTickets int, bookingList []string) ([]string, int) {
+func ticktBooking(userFirstName string, userLastName string, userTickets int, userMail string, bookRow int) ([]string, int) {
 	totalTicketBill, selectedRow := calculateBill(bookRow, userTickets)
 	fmt.Printf("Booking Successful %v %v has booked %v %vtickets\n", userFirstName, userLastName, userTickets, selectedRow)
 	fmt.Println("")
 
 	fmt.Printf("Tickets have been sent to %v", userMail)
+	fmt.Println("")
 	fmt.Printf("Total bill %v", totalTicketBill)
 	fmt.Println("")
 
 	// update the booking list
 	fullName := strings.ToUpper(userFirstName) + " " + strings.ToUpper(userLastName)
 	bookingList = append(bookingList, convertToShortName(fullName))
+	fmt.Println("")
 	fmt.Printf("BookingList %v \n", bookingList)
 
 	// remaining tickets
 	remainingTickets = remainingTickets - userTickets
-	fmt.Printf("Number of Remaining Tickets %v \n", remainingTickets)
 
 	return bookingList, remainingTickets
 
