@@ -29,19 +29,14 @@ func ValidTicktBooking(userFirstName string, userLastName string, userTickets in
 	fullName := userFirstName + " " + userLastName
 	vars.BookingList = append(vars.BookingList, helpers.ConvertToShortName(fullName))
 
-	// message
-	fmt.Printf("Booking Successful %v %v has booked %v %v tickets\n", userFirstName, userLastName, userTickets, selectedRow)
+	//
+	fmt.Println("Booking Successful ")
+	var ticket = fmt.Sprintf("Confirm Ticket %v %v has booked %v %v tickets\n", userFirstName, userLastName, userTickets, selectedRow)
 	fmt.Printf("Tickets have been sent to %v \n", userMail)
-	fmt.Printf("Total bill %v \n", totalTicketBill)
-	fmt.Printf("Booking code %v \n", bookingCode)
-	fmt.Println("")
+	go sendTicket(ticket, totalTicketBill, bookingCode)
 
-	// fmt.Println("list")
 	// fmt.Printf("%v", vars.TicketCodesList)
-
 	// remaining tickets
 	vars.RemainingTickets = vars.RemainingTickets - userTickets
-
-	// return vars.BookingList, vars.RemainingTickets
 
 }
