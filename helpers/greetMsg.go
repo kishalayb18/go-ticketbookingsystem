@@ -7,9 +7,9 @@ import (
 )
 
 func GreetMsg(RemainingTickets int) {
-	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-	fmt.Printf("Welcome to the %v Booking System\nWe have total %v tickets\n", vars.ConferenceName, vars.ConferenceTotalTickets)
+	fmt.Printf("Welcome to the %v Booking System\nTotal %v tickets\n", vars.ConferenceName, vars.ConferenceTotalTickets)
 	fmt.Printf("Remaining number of tickets %v \n", RemainingTickets)
 	fmt.Println("Get your tickets")
-	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	fmt.Println("---------------------------------------------")
+	fmt.Println("")
 }
