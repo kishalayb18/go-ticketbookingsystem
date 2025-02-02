@@ -4,54 +4,45 @@ import (
 	"fmt"
 
 	"github.com/kishalayb18/go-ticketbookingsystem/helpers"
-	"github.com/kishalayb18/go-ticketbookingsystem/process"
 	"github.com/kishalayb18/go-ticketbookingsystem/vars"
 )
 
 func main() {
-
 	var (
-		userFirstName string
-		userLastName  string
-		userMail      string
-		userTickets   int
-		bookRow       int
+		choice int
 	)
-
-	helpers.GreetMsg(vars.RemainingTickets)
-
-	// ticket booking logic
 	for {
-
-		userFirstName, userLastName, userMail, userTickets, bookRow = process.GetBookingDetails()
-		isValidName, isValidMail, isValidTicketNumber, isValidRow := helpers.ValidateBooking(userFirstName, userLastName, userMail, userTickets, bookRow)
-
-		if !isValidName {
-			fmt.Println("Please Provide Valid Name")
-			continue
-		} else if !isValidMail {
-			fmt.Println("Please Provide Valid Mail")
-			continue
-		} else if !isValidRow {
-			fmt.Println("Not a valid choice for row")
-			continue
-		} else if !isValidTicketNumber {
-			// ticket number validation logic
-			tryValue := 1
-			for {
-				fmt.Printf("The number of tickets you could choose is 1 to %v\n", vars.RemainingTickets)
-				fmt.Printf("Please enteer a valid number ")
-				fmt.Scan(&userTickets)
-				tryValue--
-				if tryValue == 0 {
-					fmt.Println("Not Valid Booking")
-					break
-				}
-			}
+		if vars.RemainingTickets <= 0 {
+			fmt.Println("")
+			fmt.Println("---------------------------------------------")
+			fmt.Println("House Full")
+			fmt.Println("New booking has stopped")
+			fmt.Println("---------------------------------------------")
+			fmt.Println("Concert Menu")
+			fmt.Println("---------------------------------------------")
+			fmt.Println("Choose From The Menu")
+			fmt.Println("1. View Your Ticket Details 2. View Booking List")
+			fmt.Println("")
+			fmt.Printf("Select the choice ")
+			fmt.Scan(&choice)
+			fmt.Println("---------------------------------------------")
+			fmt.Println("")
+			choice = choice + 1
+			menuChoice(choice)
 		} else {
-			vars.BookingList, vars.RemainingTickets = process.TicktBooking(userFirstName, userLastName, userTickets, userMail, bookRow)
+			fmt.Println("")
+			fmt.Println("---------------------------------------------")
 			helpers.GreetMsg(vars.RemainingTickets)
-
+			fmt.Println("Concert Menu")
+			fmt.Println("---------------------------------------------")
+			fmt.Println("Choose From The Menu")
+			fmt.Println("1. Book Ticket \t 2. View Your Ticket Details 3. View Booking List")
+			fmt.Println("")
+			fmt.Printf("Select the choice ")
+			fmt.Scan(&choice)
+			fmt.Println("---------------------------------------------")
+			fmt.Println("")
+			menuChoice(choice)
 		}
 	}
 }
