@@ -1,9 +1,12 @@
 package process
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // get details
-func GetBookingDetails() (string, string, string, int, int) {
+func SetUserDetails() (string, string, string, int, int) {
 	var (
 		userFirstName string
 		userLastName  string
@@ -14,10 +17,12 @@ func GetBookingDetails() (string, string, string, int, int) {
 
 	fmt.Printf("Enter first name ")
 	fmt.Scan(&userFirstName)
+	userFirstName = strings.ToUpper(userFirstName)
 	fmt.Println("")
 
 	fmt.Printf("Enter last name ")
 	fmt.Scan(&userLastName)
+	userLastName = strings.ToUpper(userLastName)
 	fmt.Println("")
 
 	fmt.Printf("Enter mail ")
