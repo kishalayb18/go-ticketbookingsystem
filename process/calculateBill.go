@@ -2,23 +2,23 @@ package process
 
 import "fmt"
 
-func calculateBill(bookRow int, userTickets int) (int, string) {
+func calculateBill(userTickets int, bookRow int) (int, string) {
 	var totalBill int
-	var rowName string
+	var selectedRow string
 	switch bookRow {
 	case 1:
 		totalBill = 5000 * userTickets
-		rowName = "Front Row"
+		selectedRow = "Front Row"
 	case 2:
 		totalBill = 3500 * userTickets
-		rowName = "Middle Row"
+		selectedRow = "Middle Row"
 	case 3:
 		totalBill = 1500 * userTickets
-		rowName = "back Row"
+		selectedRow = "back Row"
 	default:
 		fmt.Println("not a valid choice for row")
 		totalBill = 0
-		rowName = ""
+		selectedRow = ""
 	}
-	return totalBill, rowName
+	return totalBill, selectedRow
 }
