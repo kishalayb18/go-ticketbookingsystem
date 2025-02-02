@@ -10,7 +10,7 @@ import (
 func menuChoice(choice int) {
 	switch choice {
 	case 1:
-		process.BookTicket()
+		process.BookTicket(&wg)
 	case 2:
 		var bookingCode string
 		fmt.Printf("Enter Your Booking Code ")

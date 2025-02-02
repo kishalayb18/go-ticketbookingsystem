@@ -2,12 +2,13 @@ package process
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/kishalayb18/go-ticketbookingsystem/helpers"
 	"github.com/kishalayb18/go-ticketbookingsystem/vars"
 )
 
-func BookTicket() {
+func BookTicket(wg *sync.WaitGroup) {
 	var (
 		userFirstName string
 		userLastName  string
@@ -45,7 +46,7 @@ func BookTicket() {
 				}
 			}
 		} else {
-			ValidTicktBooking(userFirstName, userLastName, userTickets, userMail, bookRow)
+			ValidTicktBooking(userFirstName, userLastName, userTickets, userMail, bookRow, wg)
 			break
 		}
 	}

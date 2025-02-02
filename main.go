@@ -2,15 +2,21 @@ package main
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/kishalayb18/go-ticketbookingsystem/helpers"
 	"github.com/kishalayb18/go-ticketbookingsystem/vars"
 )
 
+var wg = sync.WaitGroup{}
+
 func main() {
 	var (
 		choice int
 	)
+
+	defer wg.Wait()
+
 	for {
 		if vars.RemainingTickets <= 0 {
 			fmt.Println("")
